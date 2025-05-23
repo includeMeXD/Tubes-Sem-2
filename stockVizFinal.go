@@ -37,7 +37,7 @@ func main() {
 			stockProfitLossViz(&balance, selectionMethod, searchMethod)
 		} else if choice == 4 {
 			options(&selectionMethod, &searchMethod)
-		} else if choice < 0 || choice > 3 {
+		} else if choice < 0 || choice > 5 {
 			fmt.Printf("Invalid Choice!\n")
 		}
 		welcomeScreen()
@@ -277,9 +277,8 @@ func investSellStocks(stocks *[30]Stock, userPortfolio *Portfolio, bal *float64,
 					sortHighestPriceInsertion(*stocks, currentDay-1)
 				}
 			} else if stockOptionChoice == 2 {
-
-				if portfolioCount >= 6 {
-					fmt.Println("Portfolio limit reached! You cannot invest in more than 6 stocks.")
+				if userPortfolio.Quantity[stockIdx] == 0 && portfolioCount >= 6 {
+					fmt.Println("Portfolio limit reached! You cannot invest in more than 6 different stocks.")
 					return
 				}
 				fmt.Printf("Search a stock to buy:\n")
@@ -298,11 +297,13 @@ func investSellStocks(stocks *[30]Stock, userPortfolio *Portfolio, bal *float64,
 					cost := stocks[stockIdx].Prices[currentDay] * float64(qty)
 					if qty > 0 && *bal >= cost {
 						*bal -= cost
-						userPortfolio.Name[stockIdx] = stocks[stockIdx].Name
+						if userPortfolio.Quantity[stockIdx] == 0 {
+							userPortfolio.Name[stockIdx] = stocks[stockIdx].Name
+							portfolioCount++
+						}
 						userPortfolio.buyPrice[stockIdx] = stocks[stockIdx].Prices[currentDay]
 						userPortfolio.Quantity[stockIdx] += qty
 						fmt.Printf("Purchase successful! New balance: $%.2f\n", *bal)
-						portfolioCount++
 
 					} else {
 						fmt.Printf("Insufficient balance or invalid quantity.\n")

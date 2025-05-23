@@ -39,7 +39,7 @@ func main() {
 		fmt.Scan(&choice)
 	}
 	// Text to show the program has ended
-	fmt.Printf("Closing...... Thank You\n")
+	fmt.Printf("Closing..... Thank You\n")
 }
 
 func welcomeScreen() {

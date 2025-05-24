@@ -28,15 +28,16 @@ func main() {
 	fmt.Scan(&choice)
 
 	for choice != 5 {
-		if choice == 1 {
+		switch choice {
+		case 1:
 			idrToUsdConverter(&balance)
-		} else if choice == 2 {
+		case 2:
 			balanceModify(&balance)
-		} else if choice == 3 {
+		case 3:
 			stockProfitLossViz(&balance, selectionMethod, searchMethod)
-		} else if choice == 4 {
+		case 4:
 			options(&selectionMethod, &searchMethod)
-		} else if choice < 0 || choice > 5 {
+		default:
 			fmt.Printf("Invalid Choice!\n")
 		}
 		welcomeScreen()

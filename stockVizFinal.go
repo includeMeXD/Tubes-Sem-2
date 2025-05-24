@@ -18,7 +18,7 @@ type Portfolio struct {
 func main() {
 	var choice int
 	var balance float64
-	var selectionMethod, searchMethod int = 1, 1
+	var selectionMethod, searchMethod int = 1, 1 // Default to Selection Sort and Sequential Search
 
 	welcomeScreen()
 	fmt.Scan(&choice)

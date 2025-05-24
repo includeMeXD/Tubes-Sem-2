@@ -2,13 +2,11 @@ package main
 
 import "fmt"
 
-// Type declaration for the stock
 type Stock struct {
 	Name   string
 	Prices [6]float64
 }
 
-// type declaration for the portfolio
 type Portfolio struct {
 	Name          [6]string
 	buyPrice      [6]float64
@@ -18,16 +16,13 @@ type Portfolio struct {
 }
 
 func main() {
-	// Variable Declaration
 	var choice int
 	var balance float64
 	var selectionMethod, searchMethod int = 1, 1
 
-	// Shows the title screen and asks the user choice
 	welcomeScreen()
 	fmt.Scan(&choice)
 
-	// Redirect the user option to the corresponding function and repeats the title screen until the user option is 3 (exit)
 	for choice != 5 {
 		if choice == 1 {
 			idrToUsdConverter(&balance)
@@ -43,7 +38,6 @@ func main() {
 		welcomeScreen()
 		fmt.Scan(&choice)
 	}
-	// Text to show the program has ended
 	fmt.Printf("Closing....... Thank You\n")
 }
 
@@ -53,10 +47,8 @@ func welcomeScreen() {
 	   F.S = Shows the user the title text and option list
 	*/
 
-	// Variable declaration
 	var ascii string
 
-	// Initialization of the title screen art and the available options
 	ascii = `
 #***********************************************************
 #***********************************************************
@@ -89,7 +81,6 @@ Welcome to Stock Tracker (US ONLY)
 ------------------------------------------------------------
 Your Option: `
 
-	// Outputs the welcome screen
 	fmt.Printf("%s", ascii)
 }
 
@@ -99,43 +90,35 @@ func idrToUsdConverter(bal *float64) {
 	   F.S = Prints the converted value to user and optionally saves the value
 	*/
 
-	// Variable declaration
 	var convertChoice int
 	var userInput float64
 	var saveVal string
 	var rate float64 = 16.474 // The default rate value is set to the average conversion price
 
-	// Asks the user of the available conversion method
 	fmt.Printf("\nChoose Conversion Method:\n1. January - May 2025 USD/IDR Average\n2. Custom Rate\nYour Option: ")
 	fmt.Scan(&convertChoice)
 
-	// Error handling if the user choice is invalid
 	for convertChoice != 1 && convertChoice != 2 {
 		fmt.Printf("Invalid Value... Please Select The Correct Options\nYour Option: ")
 		fmt.Scan(&convertChoice)
 	}
 
-	// Change the rate if the user wants a custom rate for the conversion
 	if convertChoice == 2 {
 		fmt.Printf("Set Your Prefered Rate: ")
 		fmt.Scan(&rate)
 		fmt.Printf("\n")
 	}
 
-	// Ask the user of the value which will be converted
 	fmt.Printf("How Much Would You Convert: Rp.")
 	fmt.Scan(&userInput)
 	fmt.Printf("\nYour Conversion Result Is: $%.2f", userInput/rate)
 
-	// Ask the user if they want to save the converted value
 	fmt.Printf("\nDo you wish to save the conversion value for the balance? y/N\nYour Option: ")
 	fmt.Scan(&saveVal)
 	if saveVal == "Yes" || saveVal == "yes" || saveVal == "y" || saveVal == "Y" {
 		*bal = *bal + userInput/rate
 		fmt.Printf("\nValue Saved")
 	}
-
-	// Text to show the program will be back to the title screen
 	fmt.Printf("Returning to the main screen.......")
 }
 
@@ -145,16 +128,13 @@ func balanceModify(bal *float64) {
 	   F.S = Prints the converted value to user and optionally saves the value
 	*/
 
-	// Variable declaration
 	var userChoice int
 	var userVal float64
 
-	// Prints the user balance and ask for the user option
 	fmt.Printf("Your Balance: $%.2f\n", *bal)
 	fmt.Printf("Please choose the following options:\n1. Increase or Decrease balance\n2. Exit\nYour Option: \n")
 	fmt.Scan(&userChoice)
 
-	// Asks the user of the available conversion method
 	for userChoice != 2 {
 		if userChoice == 1 {
 			fmt.Printf("\nEnter a value to add or subtract (use '-' for reduction):\nYour Option: ")
@@ -168,8 +148,6 @@ func balanceModify(bal *float64) {
 		fmt.Printf("Please choose the following options:\n1. Increase or Decrease balance\n2. Exit\nYour Option: ")
 		fmt.Scan(&userChoice)
 	}
-
-	// Text to show the program will be back to the title screen
 	fmt.Printf("Returning to the main screen.......")
 }
 
@@ -178,9 +156,8 @@ func stockProfitLossViz(bal *float64, selectionMethod, searchMethod int) {
 	   I.S = User balance
 	   F.S = Shows the user the list of stocks and the profit/loss if the user decides to invest
 	*/
-
-	// Stocks data alphabetically sorted
-	stocks := [30]Stock{
+	var stocks [30]Stock
+	stocks = [30]Stock{
 		{"AAPL", [6]float64{172.34, 168.21, 175.89, 170.56, 173.12, 174.50}},
 		{"ABBV", [6]float64{162.12, 164.45, 163.78, 165.90, 162.67, 166.10}},
 		{"ADBE", [6]float64{570.12, 572.45, 571.78, 573.90, 570.67, 574.20}},
@@ -213,7 +190,6 @@ func stockProfitLossViz(bal *float64, selectionMethod, searchMethod int) {
 		{"XOM", [6]float64{104.56, 106.12, 105.78, 107.45, 104.90, 107.80}},
 	}
 
-	// Variable declaration
 	var userChoice, i int
 	var userPortfolio Portfolio
 
@@ -221,7 +197,6 @@ func stockProfitLossViz(bal *float64, selectionMethod, searchMethod int) {
 		if userChoice == 1 {
 			fmt.Printf("Available Stocks:\n")
 			for i = 0; i < 30; i += 5 {
-				// Print 5 stocks per row
 				fmt.Printf("%s %s %s %s %s\n", stocks[i].Name, stocks[i+1].Name, stocks[i+2].Name, stocks[i+3].Name, stocks[i+4].Name)
 			}
 		} else if userChoice == 2 {
@@ -232,7 +207,6 @@ func stockProfitLossViz(bal *float64, selectionMethod, searchMethod int) {
 		fmt.Printf("Please choose the following options:\n1. View Stocks\n2. Invest/Sell Stocks\n3. Exit\nYour Option: ")
 		fmt.Scan(&userChoice)
 	}
-	// Text to show the program will be back to the title screen
 	fmt.Printf("Returning to the main screen.......")
 }
 
@@ -244,6 +218,7 @@ func investSellStocks(stocks *[30]Stock, userPortfolio *Portfolio, bal *float64,
 
 	var i, currentDay, stockOptionChoice, stockIdx, qty, portfolioCount int
 	var stockSearch string
+	var cost, proceeds float64
 
 	currentDay = 1
 	for currentDay <= 5 {
@@ -252,15 +227,13 @@ func investSellStocks(stocks *[30]Stock, userPortfolio *Portfolio, bal *float64,
 		for i = 0; i < 6; i++ {
 			if userPortfolio.Quantity[i] > 0 {
 				if currentDay > 1 { // Only calculate profit from day 2 onwards
-					// Update profit and return percent for the current day
 					userPortfolio.Profit[i] = (stocks[i].Prices[currentDay] - userPortfolio.buyPrice[i]) * float64(userPortfolio.Quantity[i])
 					userPortfolio.ReturnPercent[i] = (userPortfolio.Profit[i] / userPortfolio.buyPrice[i]) * 100
 					fmt.Printf("Stock: %s, Buy Price: $%.2f, Quantity: %d, Profit: $%.2f, Return Percent: %.2f%%\n",
 						userPortfolio.Name[i], userPortfolio.buyPrice[i], userPortfolio.Quantity[i], userPortfolio.Profit[i], userPortfolio.ReturnPercent[i])
 				} else {
-					// On day 1, only show the stock holdings without profit
 					fmt.Printf("Stock: %s, Buy Price: $%.2f, Quantity: %d\n",
-						userPortfolio.Name[i], userPortfolio.buyPrice[i], userPortfolio.Quantity[i])
+						userPortfolio.Name[i], userPortfolio.buyPrice[i], userPortfolio.Quantity[i]) // On day 1, only show the stock holdings without profit
 				}
 			}
 		}
@@ -294,7 +267,7 @@ func investSellStocks(stocks *[30]Stock, userPortfolio *Portfolio, bal *float64,
 					fmt.Printf("Current Price: $%.2f\n", stocks[stockIdx].Prices[currentDay])
 					fmt.Printf("How many shares would you like to buy?\nYour Option: ")
 					fmt.Scan(&qty)
-					cost := stocks[stockIdx].Prices[currentDay] * float64(qty)
+					cost = stocks[stockIdx].Prices[currentDay] * float64(qty)
 					if qty > 0 && *bal >= cost {
 						*bal -= cost
 						if userPortfolio.Quantity[stockIdx] == 0 {
@@ -321,7 +294,7 @@ func investSellStocks(stocks *[30]Stock, userPortfolio *Portfolio, bal *float64,
 					fmt.Printf("How many shares would you like to sell? (You own %d)\nYour Option: ", userPortfolio.Quantity[stockIdx])
 					fmt.Scan(&qty)
 					if qty > 0 && qty <= userPortfolio.Quantity[stockIdx] {
-						proceeds := stocks[stockIdx].Prices[currentDay] * float64(qty)
+						proceeds = stocks[stockIdx].Prices[currentDay] * float64(qty)
 						*bal += proceeds
 						userPortfolio.Quantity[stockIdx] -= qty
 						if userPortfolio.Quantity[stockIdx] == 0 {

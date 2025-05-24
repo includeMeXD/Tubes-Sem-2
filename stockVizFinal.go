@@ -2,18 +2,22 @@ package main
 
 import "fmt"
 
-type Stock struct {
+type Stockstruct struct {
 	Name   string
 	Prices [6]float64
 }
 
-type Portfolio struct {
+type Portfoliostruct struct {
 	Name          [6]string
 	buyPrice      [6]float64
 	Quantity      [6]int
 	Profit        [6]float64
 	ReturnPercent [6]float64
 }
+
+type Stock [30]Stockstruct
+
+type Portfolio Portfoliostruct
 
 func main() {
 	var choice int
@@ -156,8 +160,8 @@ func stockProfitLossViz(bal *float64, selectionMethod, searchMethod int) {
 	   I.S = User balance
 	   F.S = Shows the user the list of stocks and the profit/loss if the user decides to invest
 	*/
-	var stocks [30]Stock
-	stocks = [30]Stock{
+	var stocks Stock
+	stocks = Stock{
 		{"AAPL", [6]float64{172.34, 168.21, 175.89, 170.56, 173.12, 174.50}},
 		{"ABBV", [6]float64{162.12, 164.45, 163.78, 165.90, 162.67, 166.10}},
 		{"ADBE", [6]float64{570.12, 572.45, 571.78, 573.90, 570.67, 574.20}},
@@ -189,9 +193,11 @@ func stockProfitLossViz(bal *float64, selectionMethod, searchMethod int) {
 		{"WMT", [6]float64{162.12, 164.45, 163.78, 165.90, 162.67, 166.10}},
 		{"XOM", [6]float64{104.56, 106.12, 105.78, 107.45, 104.90, 107.80}},
 	}
-
 	var userChoice, i int
 	var userPortfolio Portfolio
+
+	fmt.Printf("Please choose the following options:\n1. View Stocks\n2. Invest/Sell Stocks\n3. Exit\nYour Option: ")
+	fmt.Scan(&userChoice)
 
 	for userChoice != 3 {
 		if userChoice == 1 {
@@ -201,7 +207,7 @@ func stockProfitLossViz(bal *float64, selectionMethod, searchMethod int) {
 			}
 		} else if userChoice == 2 {
 			investSellStocks(&stocks, &userPortfolio, bal, selectionMethod, searchMethod)
-		} else {
+		} else if userChoice != 3 {
 			fmt.Printf("Invalid Value... Please Select The Correct Options\n")
 		}
 		fmt.Printf("Please choose the following options:\n1. View Stocks\n2. Invest/Sell Stocks\n3. Exit\nYour Option: ")
@@ -210,7 +216,7 @@ func stockProfitLossViz(bal *float64, selectionMethod, searchMethod int) {
 	fmt.Printf("Returning to the main screen.......")
 }
 
-func investSellStocks(stocks *[30]Stock, userPortfolio *Portfolio, bal *float64, selectionMethod, searchMethod int) {
+func investSellStocks(stocks *Stock, userPortfolio *Portfolio, bal *float64, selectionMethod, searchMethod int) {
 	/*
 		I.S = Stocks data, User Portfolio, User Balance
 		F.S = Shows the user the list of stocks and the profit/loss if the user decides to invest
@@ -237,13 +243,14 @@ func investSellStocks(stocks *[30]Stock, userPortfolio *Portfolio, bal *float64,
 				}
 			}
 		}
-
 		// Trading menu loop for current day
 		stockOptionChoice = 0
 		for stockOptionChoice != 4 && stockOptionChoice != 5 {
 			fmt.Print("\nSelect the following options:\n1. Previous day highest gainers\n2. Buy a stock\n3. Sell a stock\n4. Skip to next day\n5. Exit\nYour Option: ")
 			fmt.Scan(&stockOptionChoice)
-			if stockOptionChoice == 1 {
+			if stockOptionChoice == 5 {
+				return // Exit immediately if user chooses option 5
+			} else if stockOptionChoice == 1 {
 				if selectionMethod == 1 {
 					sortHighestPriceSelection(*stocks, currentDay-1)
 				} else {
@@ -320,7 +327,7 @@ func investSellStocks(stocks *[30]Stock, userPortfolio *Portfolio, bal *float64,
 	}
 }
 
-func sortHighestPriceSelection(stocks [30]Stock, n int) {
+func sortHighestPriceSelection(stocks Stock, n int) {
 	/*
 	   I.S = Stocks data and current trading day
 	   F.S = Sorts and displays the stocks data by the highest price from the previous day
@@ -330,7 +337,7 @@ func sortHighestPriceSelection(stocks [30]Stock, n int) {
 
 	// Sort the copy by the highest price of the previous day
 	var i, min, pass int
-	var temp Stock
+	var temp Stockstruct
 
 	for pass = 0; pass < 30; pass++ {
 		min = pass
@@ -351,7 +358,7 @@ func sortHighestPriceSelection(stocks [30]Stock, n int) {
 	}
 }
 
-func sortHighestPriceInsertion(stocks [30]Stock, n int) {
+func sortHighestPriceInsertion(stocks Stock, n int) {
 	/*
 	   I.S = Stocks data and current trading day
 	   F.S = Sorts and displays the stocks data by the highest price from the previous day
@@ -361,13 +368,12 @@ func sortHighestPriceInsertion(stocks [30]Stock, n int) {
 
 	// Sort the copy by the highest price of the previous day
 	var pass, j, i int
-	var temp Stock
-
+	var temp Stockstruct
 	for pass = 1; pass < 30; pass++ {
 		j = pass
 		temp = stocks[pass]
-		for j > 0 && i >= 0 && stocks[i].Prices[n] < temp.Prices[n] {
-			stocks[j] = stocks[i]
+		for j > 0 && stocks[j-1].Prices[n] < temp.Prices[n] {
+			stocks[j] = stocks[j-1]
 			j--
 		}
 		stocks[j] = temp
@@ -380,7 +386,7 @@ func sortHighestPriceInsertion(stocks [30]Stock, n int) {
 	}
 }
 
-func searchUsingBinSearch(stocks [30]Stock, stockName string) int {
+func searchUsingBinSearch(stocks Stock, stockName string) int {
 	/*
 	   I.S = Stocks data
 	   F.S = Returns the index of the stock if found or -1 if not found
@@ -406,7 +412,7 @@ func searchUsingBinSearch(stocks [30]Stock, stockName string) int {
 
 }
 
-func searchUsingSeqSearch(stocks [30]Stock, stockName string) int {
+func searchUsingSeqSearch(stocks Stock, stockName string) int {
 	/*
 	   I.S = Stocks data
 	   F.S = Returns the index of the stock if found or -1 if not found
